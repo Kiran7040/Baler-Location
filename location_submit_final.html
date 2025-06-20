@@ -1,0 +1,36 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Location Submit</title>
+  <script>
+    function submitLoc() {
+      const params = new URLSearchParams(window.location.search);
+      const name = encodeURIComponent(params.get("name") || "");
+      const mobile = encodeURIComponent(params.get("mobile") || "");
+
+      if (!navigator.geolocation) {
+        alert("Location not supported.");
+        return;
+      }
+
+      navigator.geolocation.getCurrentPosition(function(pos) {
+        const lat = pos.coords.latitude;
+        const lon = pos.coords.longitude;
+        const url = "https://script.google.com/macros/s/AKfycbxb1HXKpsRfqMAP2ZdDqTXMQF_m54-uOjj5fiw_PKEl2hM43HWw5MrQpB5LjgVjnCPy/exec";
+        const full = `${url}?name=${name}&mobile=${mobile}&lat=${lat}&lon=${lon}`;
+        fetch(full)
+          .then(r => r.text())
+          .then(txt => document.body.innerHTML = txt);
+      }, function() {
+        alert("Location access denied.");
+      });
+    }
+
+    window.onload = submitLoc;
+  </script>
+</head>
+<body>
+  <h3>Location capturing... Please allow access.</h3>
+</body>
+</html>
